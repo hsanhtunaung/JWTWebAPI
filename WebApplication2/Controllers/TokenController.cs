@@ -30,6 +30,7 @@ namespace WebApplication2.Controllers
         public async Task<IActionResult> Post(UserInfo _userData)
         {
 
+            
             if (_userData != null && _userData.Email != null && _userData.Password != null)
             {
                 var user = await GetUser(_userData.Email, _userData.Password);
@@ -45,7 +46,9 @@ namespace WebApplication2.Controllers
                     new Claim("FirstName", user.FirstName),
                     new Claim("LastName", user.LastName),
                     new Claim("UserName", user.UserName),
-                    new Claim("Email", user.Email)
+                    new Claim("Email", user.Email),
+                    new Claim("Age",user.Age.ToString())
+
                    };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -69,6 +72,7 @@ namespace WebApplication2.Controllers
 
         private async Task<UserInfo> GetUser(string email, string password)
         {
+            var itemlst = _context.Items.ToList();
             return await _context.UserInfo.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
     }

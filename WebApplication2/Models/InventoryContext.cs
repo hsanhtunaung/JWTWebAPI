@@ -18,6 +18,8 @@ namespace WebApplication2.Models
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
 
+        public virtual DbSet<Items> Items { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -49,7 +51,18 @@ namespace WebApplication2.Models
 
                 entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 0)");
             });
+            modelBuilder.Entity<Items>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("PK_Items");             
 
+                entity.Property(e => e.ItemName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+            });
             modelBuilder.Entity<UserInfo>(entity =>
             {
                 entity.HasKey(e => e.UserId)
@@ -83,6 +96,10 @@ namespace WebApplication2.Models
                     .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Age)
+                  .IsRequired()                 
+                  .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
